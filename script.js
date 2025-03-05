@@ -180,7 +180,7 @@ document.addEventListener('DOMContentLoaded', function() {
             yellow_positions: yellowPositions.join('')
         };
         
-        fetch('https://YOUR-API-GATEWAY-URL/solve', {
+        fetch('https://5jxryh9kx6.execute-api.us-east-2.amazonaws.com/prod/solve', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
