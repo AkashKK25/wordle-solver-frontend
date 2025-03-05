@@ -151,12 +151,11 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Solve button functionality
     document.getElementById('solve-btn').addEventListener('click', function() {
+        // Collect data from the grid cells
         const green = Array(5).fill('?');
         const yellow = [];
         const yellowPositions = [];
         const black = [];
-
-        console.log('Sending data to API:', data);
         
         cells.forEach(cell => {
             const letter = cell.querySelector('.letter-input').value.toLowerCase();
@@ -175,12 +174,15 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         
-        const data = {
+        // Create the request data object
+        const requestData = {
             green: green.join(''),
             black: black.join(''),
             yellow_letters: yellow.join(''),
             yellow_positions: yellowPositions.join('')
         };
+        
+        console.log('Sending data to API:', requestData);
         
         fetch('https://5jxryh9kx6.execute-api.us-east-2.amazonaws.com/prod/solve', {
             method: 'POST',
@@ -188,17 +190,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 'Content-Type': 'application/json',
             },
             mode: 'cors',
-            body: JSON.stringify(data)
+            body: JSON.stringify(requestData)
         })
         .then(response => {
-            console.log('Raw response:', response);
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
             return response.json();
         })
         .then(responseData => {
-            console.log('API Response:', responseData);
+            console.log('API Response:', responseData); // Add this to debug
             
             // Check if responseData contains a 'body' property that's a string
             let processedData = responseData;
@@ -243,7 +244,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         })
         .catch(error => {
-            console.error('Fetch error:', error);
             console.error('Error:', error);
             document.getElementById('common-word-list').innerHTML = 
                 `<p class="text-danger">Error: ${error.message}. Please try again.</p>`;
