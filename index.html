@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wordle Solver</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container mt-4">
+        <div class="header">
+            WORDLE SOLVER
+            <span class="help-icon" id="help-icon"><i class="fas fa-question-circle"></i></span>
+        </div>
+        
+        <div class="instructions" id="instructions">
+            <h5>Instructions:</h5>
+            <ol>
+                <li>Try a word in the WORDLE game.</li>
+                <li>Enter the word here.</li>
+                <li>Click on each letter cell to cycle through states:</li>
+                <ul>
+                    <li>Gray (absent): Letter is not in the word</li>
+                    <li>Yellow (present): Letter is in the word but in the wrong position</li>
+                    <li>Green (correct): Letter is in the correct position</li>
+                </ul>
+                <li>Click 'Solve'.</li>
+                <li>Repeat until you get the correct word.</li>
+            </ol>
+            <p>Enjoy!</p>
+            <br>
+            <h5>Keyboard Shortcuts:</h5>
+                <ul>
+                    <li> Press 'Enter' or 'Return' for 'Solve'
+                    <li> Press 'Delete' for 'Reset'
+                </ul>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <!-- Multiple rows for guesses (6 rows like in Wordle) -->
+                <div id="word-grids" class="mb-4">
+                    <div class="word-row mb-2">
+                        <div class="d-flex justify-content-center">
+                            <div class="grid-cell" data-row="0" data-position="0" data-state="empty">
+                                <input type="text" maxlength="1" class="letter-input" pattern="[A-Za-z]" autofocus>
+                            </div>
+                            <div class="grid-cell" data-row="0" data-position="1" data-state="empty">
+                                <input type="text" maxlength="1" class="letter-input" pattern="[A-Za-z]">
+                            </div>
+                            <div class="grid-cell" data-row="0" data-position="2" data-state="empty">
+                                <input type="text" maxlength="1" class="letter-input" pattern="[A-Za-z]">
+                            </div>
+                            <div class="grid-cell" data-row="0" data-position="3" data-state="empty">
+                                <input type="text" maxlength="1" class="letter-input" pattern="[A-Za-z]">
+                            </div>
+                            <div class="grid-cell" data-row="0" data-position="4" data-state="empty">
+                                <input type="text" maxlength="1" class="letter-input" pattern="[A-Za-z]">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center mb-4">
+                    <button id="solve-btn" class="btn btn-solve btn-lg px-4 me-2">Solve</button>
+                    <button id="reset-btn" class="btn btn-reset btn-lg px-4">Reset</button>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div>
+                    <h5 class="mb-2" style="color: #538d4e;">Common Wordles:</h5>
+                    <div id="common-word-list" class="word-list common-word-list">
+                        <p id="common-initial-message">Click "Solve" to see common words.</p>
+                    </div>
+                </div>
+                
+                <div>
+                    <h5 class="mb-2" style="color: #b59f3b;">Rare Wordles:</h5>
+                    <div id="rare-word-list" class="word-list rare-word-list">
+                        <p id="rare-initial-message">Click "Solve" to see rare words.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Created by Akash Kondaparthi © 2025 
+                | <a href="https://github.com/akashkk25" target="_blank">GitHub</a>
+                | <a href="https://linkedin.com/in/akashkk" target="_blank">LinkedIn</a></p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
