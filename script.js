@@ -155,6 +155,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const yellow = [];
         const yellowPositions = [];
         const black = [];
+
+        console.log('Sending data to API:', data);
         
         cells.forEach(cell => {
             const letter = cell.querySelector('.letter-input').value.toLowerCase();
@@ -185,19 +187,43 @@ document.addEventListener('DOMContentLoaded', function() {
             headers: {
                 'Content-Type': 'application/json',
             },
+            mode: 'cors',
             body: JSON.stringify(data)
         })
-        .then(response => response.json())
-        .then(data => {
+        .then(response => {
+            console.log('Raw response:', response);
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(responseData => {
+            console.log('API Response:', responseData);
+            
+            // Check if responseData contains a 'body' property that's a string
+            let processedData = responseData;
+            if (responseData.body && typeof responseData.body === 'string') {
+                try {
+                    processedData = JSON.parse(responseData.body);
+                    console.log('Parsed body:', processedData);
+                } catch (e) {
+                    console.error('Error parsing response body:', e);
+                }
+            }
+            
             const commonWordList = document.getElementById('common-word-list');
             const rareWordList = document.getElementById('rare-word-list');
             
+            // Safely access arrays with fallbacks
+            const commonWords = processedData.common_words || [];
+            const rareWords = processedData.rare_words || [];
+            
             // Handle common words list
-            if (data.common_words.length === 0) {
+            if (commonWords.length === 0) {
                 commonWordList.innerHTML = '<p>No common words found matching these constraints.</p>';
             } else {
                 let commonHtml = '<div class="row">';
-                data.common_words.forEach(word => {
+                commonWords.forEach(word => {
                     commonHtml += `<div class="col-md-3 col-6 mb-2">${word}</div>`;
                 });
                 commonHtml += '</div>';
@@ -205,11 +231,11 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             // Handle rare words list
-            if (data.rare_words.length === 0) {
+            if (rareWords.length === 0) {
                 rareWordList.innerHTML = '<p>No rare words found matching these constraints.</p>';
             } else {
                 let rareHtml = '<div class="row">';
-                data.rare_words.forEach(word => {
+                rareWords.forEach(word => {
                     rareHtml += `<div class="col-md-3 col-6 mb-2">${word}</div>`;
                 });
                 rareHtml += '</div>';
@@ -217,9 +243,10 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         })
         .catch(error => {
+            console.error('Fetch error:', error);
             console.error('Error:', error);
             document.getElementById('common-word-list').innerHTML = 
-                '<p class="text-danger">An error occurred. Please try again.</p>';
+                `<p class="text-danger">Error: ${error.message}. Please try again.</p>`;
             document.getElementById('rare-word-list').innerHTML = '';
         });
     });
